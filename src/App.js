@@ -1,25 +1,107 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import CartCard from "./CartCard";
+import ProductCard from "./productCard";
+import "./App.css";
 
-function App() {
+const data = [
+  {
+    label: "Idli",
+    price: 20,
+  },
+  {
+    label: "Dosa",
+    price: 40,
+  },
+  {
+    label: "Poori",
+    price: 40,
+  },
+  {
+    label: "Sevai",
+    price: 35,
+  },
+  {
+    label: "Coffee",
+    price: 15,
+  },
+  {
+    label: "Vadai",
+    price: 10,
+  },
+  {
+    label: "Pongal",
+    price: 35,
+  },
+  {
+    label: "Veg Biriyani",
+    price: 45,
+  },
+  {
+    label:"ice cream",
+    price:50,
+  }
+];
+
+function Cart() {
+  const [cart, setCart] = useState([]);
+
+  function handleChange(item = {}) {
+    let cartCopy = [...cart];
+    if (item.label) {
+      cartCopy.push(item);
+    }
+    setCart(cartCopy);
+  }
+
+  function handleCart(item = {}) {
+    console.log(item);
+    let cartCopy = [...cart];
+    if (item.label) {
+      cartCopy = cartCopy.filter((_data) => _data.label !== item.label);
+    }
+    setCart(cartCopy);
+  }
+
+  function checkCartStatus(item = {}) {
+    let status = false;
+    if (item.label) {
+      status =
+        cart.filter((_data) => _data.label === item.label).length > 0
+          ? true
+          : false;
+    }
+    return status;
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <section className="pricing py-5">
+      <div className="container">
+        <div className="container-fluid">
+          <div className="row">
+            <div className="col-lg-8">
+              {data.map((element, index) => (
+                <ProductCard
+                  key={`product-card-${index}`}
+                  disabled={checkCartStatus(element)}
+                  data={element}
+                  onChange={handleChange}
+                />
+              ))}
+            </div>
+            <div className="col-lg-4">
+              {cart.map((d, index) => (
+                <CartCard
+                  key={`cart-card-${index}`}
+                  data={d}
+                  onRemove={handleCart}
+                />
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
-export default App;
+export default Cart;
